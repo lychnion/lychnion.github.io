@@ -19,14 +19,16 @@
   --chip: var(--moon);
   --mark-fg: var(--night);
   --mark-outline: 2.6px;
-  --band: var(--night);
-  --band-fg: var(--moon);
-  --band-muted: #A9B0BF;
-  color-scheme: light dark;
+  --phone-bg: var(--night);
+  --phone-ring: transparent;
+  --show-sun: none;
+  --show-moon: inline;
+  --glow-strength: 0.85;
+  color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: var(--night);
     --fg: var(--moon);
     --muted: #A9B0BF;
@@ -37,8 +39,32 @@
     --chip: #22314F;
     --mark-fg: var(--moon);
     --mark-outline: 0px;
-    --band: #0F1930;
+    --phone-bg: #0B1426;
+    --phone-ring: var(--line);
+    --show-sun: inline;
+    --show-moon: none;
+    --glow-strength: 1;
+    color-scheme: dark;
   }
+}
+
+:root[data-theme="dark"] {
+  --bg: var(--night);
+  --fg: var(--moon);
+  --muted: #A9B0BF;
+  --heading: var(--moon);
+  --card: #1E2D4D;
+  --line: #34446A;
+  --link: var(--sky);
+  --chip: #22314F;
+  --mark-fg: var(--moon);
+  --mark-outline: 0px;
+  --phone-bg: #0B1426;
+  --phone-ring: var(--line);
+  --show-sun: inline;
+  --show-moon: none;
+  --glow-strength: 1;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -91,6 +117,27 @@ a:hover { color: var(--heading); }
   letter-spacing: -0.01em;
 }
 
+.actions { display: flex; align-items: center; gap: 10px; }
+
+.theme-toggle {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--heading);
+  cursor: pointer;
+}
+.theme-toggle:hover { background: var(--chip); }
+.theme-toggle:focus-visible, .lang:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.theme-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.theme-toggle .sun { display: var(--show-sun); }
+.theme-toggle .moon { display: var(--show-moon); }
+
 .lang {
   font-size: 15px;
   padding: 10px 16px;
@@ -108,6 +155,25 @@ a:hover { color: var(--heading); }
 .mark .roof { fill: none; stroke: var(--mark-fg); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
 .mark .light { fill: var(--glow); stroke: var(--night); stroke-width: var(--mark-outline); }
 .mark .pin { fill: var(--mark-fg); stroke: var(--mark-fg); stroke-width: 2; stroke-linejoin: round; }
+
+/* Glowing light (brand motion: switch on, then a slow living glow that settles) */
+.glow { overflow: visible; }
+.glow .lx { transform-box: fill-box; transform-origin: center; }
+.glow .halos { opacity: var(--glow-strength); }
+.glow .core { animation: lx-on 1.1s cubic-bezier(.2,.8,.2,1) both; }
+.glow .roof { animation: lx-roof 0.9s ease-out 0.25s both; }
+.glow .pin { animation: lx-pin 0.9s ease-out 0.4s both; }
+.glow .halo { animation: lx-halo-in 1.2s ease-out 0.3s both, lx-halo 3.6s ease-in-out 1.5s 8; }
+.glow .halo2 { animation: lx-halo-in 1.6s ease-out 0.5s both, lx-halo2 4.2s ease-in-out 2.1s 7; }
+@keyframes lx-on { 0% { opacity: 0; transform: scale(.2); } 60% { opacity: 1; transform: scale(1.08); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes lx-roof { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+@keyframes lx-pin { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+@keyframes lx-halo-in { from { opacity: 0; transform: scale(.5); } }
+@keyframes lx-halo { 0%, 100% { transform: scale(1); opacity: .75; } 30% { transform: scale(1.06); opacity: .95; } 55% { transform: scale(1.01); opacity: .72; } 80% { transform: scale(1.05); opacity: .9; } }
+@keyframes lx-halo2 { 0%, 100% { transform: scale(1); opacity: .45; } 45% { transform: scale(1.1); opacity: .6; } 75% { transform: scale(1.03); opacity: .4; } }
+@media (prefers-reduced-motion: reduce) {
+  .glow .core, .glow .roof, .glow .pin, .glow .halo, .glow .halo2 { animation: none; }
+}
 
 /* Hero */
 .hero {
@@ -178,11 +244,8 @@ html[lang="en"] .tagline {
   width: min(300px, 100%);
   border-radius: 40px;
   padding: 10px;
-  background: var(--night);
-  box-shadow: 0 1px 0 var(--line);
-}
-@media (prefers-color-scheme: dark) {
-  .phone { background: #0B1426; outline: 1px solid var(--line); }
+  background: var(--phone-bg);
+  outline: 1px solid var(--phone-ring);
 }
 .phone img {
   display: block;
@@ -291,7 +354,8 @@ footer .credit { font-family: 'Lexend', sans-serif; }
 }
 
 @media (max-width: 480px) {
-  .wrap { padding: 0 16px; }
+  .wrap { padding-left: 16px; padding-right: 16px; }
+  .hero { padding-top: 16px; }
   body { font-size: 16px; }
   .lockup .latin { font-size: 40px; }
   .lockup svg { width: 64px; height: 64px; }
