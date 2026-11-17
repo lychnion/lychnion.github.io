@@ -1,0 +1,28 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Source of assets/og-ja.png and assets/og-en.png (1200x630). Render: tools/render-og.sh -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@700&family=Lexend:wght@400;500&family=Zen+Maru+Gothic:wght@700&display=swap">
+<style>
+html,body{margin:0;width:1200px;height:630px;overflow:hidden}
+.c{width:1200px;height:630px;box-sizing:border-box;background:#16233F;padding:72px 88px;display:flex;flex-direction:column;justify-content:space-between;position:relative}
+.l{display:flex;align-items:center;gap:24px}
+.n{display:flex;flex-direction:column;gap:8px}
+.lat{font-family:Lexend,sans-serif;font-weight:500;font-size:72px;letter-spacing:-.015em;line-height:1;color:#EDEBE4}
+.k{font-family:'Zen Maru Gothic',sans-serif;font-weight:700;font-size:28px;letter-spacing:.12em;color:#A9B0BF}
+.t{display:flex;flex-direction:column;gap:10px}
+.ja{font-family:'BIZ UDPGothic',sans-serif;font-size:40px;font-weight:700;line-height:1.4;color:#EDEBE4}
+.en{font-family:Lexend,sans-serif;font-size:28px;line-height:1.4;color:#A9B0BF}
+.en.big{font-size:44px;font-weight:500;color:#EDEBE4;line-height:1.25}
+</style></head><body>
+<div class="c">
+<div class="l"><svg viewBox="0 0 64 64" width="120" height="120"><path d="M12 25 L32 10 L52 25" fill="none" stroke="#EDEBE4" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="36" r="11" fill="#F2B544"/><path d="M26.5 51 H37.5 L32 59 Z" fill="#EDEBE4" stroke="#EDEBE4" stroke-width="2" stroke-linejoin="round"/></svg>
+<div class="n"><span class="lat">Lychnion</span><span class="k">リクニオン</span></div></div>
+<div class="t" id="t"></div>
+</div>
+<script>
+const en = location.hash === '#en';
+document.getElementById('t').innerHTML = en
+  ? '<span class="en big">A small light in your hand,<br>for when the network goes down.</span>'
+  : '<span class="ja">ネットが止まっても、手のひらに小さな灯り。</span><span class="en">A small light in your hand, for when the network goes down.</span>';
+</script>
+</body></html>
